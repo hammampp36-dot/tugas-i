@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinNusa - Platform Keuangan & Investasi Masa Depan</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for Financial Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        },
+                        navy: {
+                            800: '#0f172a',
+                            900: '#0a0f1d',
+                            950: '#030712'
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 25px -5px rgba(16, 185, 129, 0.3)',
+                        'glow-blue': '0 0 25px -5px rgba(59, 130, 246, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .dark-glass {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Custom range slider thumb styling */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(5, 150, 105, 0.5);
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md bg-white/80 border-b border-slate-200/80" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2.5 text-2xl font-extrabold tracking-tight text-slate-900">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                        <i class="fa-solid fa-chart-line text-lg"></i>
+                    </div>
+                    <span>Fin<span class="text-brand-600">Nusa</span></span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                    <a href="#fitur" class="hover:text-brand-600 transition-colors">Fitur</a>
+                    <a href="#simulasi" class="hover:text-brand-600 transition-colors">Kalkulator</a>
+                    <a href="#keamanan" class="hover:text-brand-600 transition-colors">Keamanan</a>
+                    <a href="#harga" class="hover:text-brand-600 transition-colors">Paket</a>
+                    <a href="#faq" class="hover:text-brand-600 transition-colors">FAQ</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="hidden md:flex items-center gap-4">
+                    <button onclick="openModal('loginModal')" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 transition-colors">
+                        Masuk
+                    </button>
+                    <button onclick="openModal('registerModal')" class="px-5 py-2.5 text-sm font-semibold text-white bg-slate-900 hover:bg-brand-600 rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5">
+                        Mulai Gratis
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
+            <a href="#fitur" class="block py-2 text-base font-medium text-slate-700 hover:text-brand-600">Fitur</a>
+            <a href="#simulasi" class="block py-2 text-base font-medium text-slate-700 hover:text-brand-600">Kalkulator Simulasi</a>
+            <a href="#keamanan" class="block py-2 text-base font-medium text-slate-700 hover:text-brand-600">Keamanan</a>
+            <a href="#harga" class="block py-2 text-base font-medium text-slate-700 hover:text-brand-600">Paket Layanan</a>
+            <a href="#faq" class="block py-2 text-base font-medium text-slate-700 hover:text-brand-600">FAQ</a>
+            <div class="pt-4 flex flex-col gap-2">
+                <button onclick="openModal('loginModal')" class="w-full py-2.5 text-center text-slate-800 font-semibold border border-slate-300 rounded-xl">Masuk</button>
+                <button onclick="openModal('registerModal')" class="w-full py-2.5 text-center text-white bg-brand-600 font-semibold rounded-xl shadow-md">Daftar Sekarang</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-b from-slate-100 via-slate-50 to-white">
+        <!-- Background Decorative Glows -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <!-- Left Text Content -->
+                <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold tracking-wide uppercase">
+                        <span class="flex h-2 w-2 rounded-full bg-brand-500 animate-ping"></span>
+                        Aplikasi Keuangan No. 1 di Indonesia
+                    </div>
+
+                    <!-- Main Headline -->
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.15] tracking-tight">
+                        Wujudkan Kebebasan Finansial dengan <span class="bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">Cerdas & Otomatis</span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-lg sm:text-xl text-slate-600 font-normal max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Kelola anggaran bulanan, tabung secara otomatis, dan kembangkan portofolio investasi Anda dalam satu platform terenkripsi tinggi.
+                    </p>
+
+                    <!-- CTAs & Trust Pill -->
+                    <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <button onclick="openModal('registerModal')" class="w-full sm:w-auto px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-glow transition-all duration-300 flex items-center justify-center gap-3 text-base">
+                            <span>Mulai Coba Gratis</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <a href="#simulasi" class="w-full sm:w-auto px-7 py-4 bg-white hover:bg-slate-100 text-slate-800 font-bold rounded-2xl border border-slate-200 shadow-sm transition-all duration-200 text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-calculator text-brand-600"></i>
+                            <span>Simulasi Hasil</span>
+                        </a>
+                    </div>
+
+                    <!-- Regulatory Micro Trust -->
+                    <div class="pt-4 flex items-center justify-center lg:justify-start gap-6 text-slate-500 text-xs font-medium">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-brand-600 text-sm"></i>
+                            <span>Terdaftar & Diawasi OJK</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-lock text-brand-600 text-sm"></i>
+                            <span>Enkripsi 256-Bit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Visual Interactive Card Showcase -->
+                <div class="lg:col-span-5 relative">
+                    <!-- Glassmorphism Card Stack -->
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        
+                        <!-- Main Card -->
+                        <div class="glass-card rounded-3xl p-6 shadow-2xl border border-slate-200/80 relative z-20 space-y-6">
+                            
+                            <!-- Header Info -->
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                                <div>
+                                    <p class="text-xs text-slate-500 font-medium">Total Portofolio Aset</p>
+                                    <h3 class="text-2xl font-bold text-slate-900 mt-0.5">Rp 148.500.000</h3>
+                                </div>
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> +14.8%
+                                </span>
+                            </div>
+
+                            <!-- Mini Chart Container -->
+                            <div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-500 mb-2">
+                                    <span>Pertumbuhan Tahun Ini</span>
+                                    <span class="text-brand-600">+Rp 19.200.000</span>
+                                </div>
+                                <div class="h-36 w-full">
+                                    <canvas id="heroMiniChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Quick Breakdown Cards -->
+                            <div class="grid grid-cols-2 gap-3 pt-2">
+                                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                    <p class="text-[11px] font-semibold text-slate-400 uppercase">Reksa Dana</p>
+                                    <p class="text-sm font-bold text-slate-800 mt-0.5">Rp 85.000.000</p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                    <p class="text-[11px] font-semibold text-slate-400 uppercase">Emas Digital</p>
+                                    <p class="text-sm font-bold text-slate-800 mt-0.5">Rp 63.500.000</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Badge 1 (Top Right) -->
+                        <div class="absolute -top-6 -right-6 z-30 bg-white rounded-2xl p-4 shadow-xl border border-slate-100 hidden sm:flex items-center gap-3.5 animate-bounce" style="animation-duration: 4s;">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-bullseye text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 font-semibold">Target Tabungan</p>
+                                <p class="text-sm font-bold text-slate-800">Rumah Pertama (82%)</p>
+                            </div>
+                        </div>
+
+                        <!-- Floating Badge 2 (Bottom Left) -->
+                        <div class="absolute -bottom-6 -left-6 z-30 bg-slate-900 text-white rounded-2xl p-4 shadow-xl border border-slate-800 hidden sm:flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold text-xs">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400">Smart Auto-Save</p>
+                                <p class="text-xs font-semibold text-emerald-400">+Rp 500.000 Tersimpan Hari Ini</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST & STATS STRIP -->
+    <section class="bg-slate-900 py-10 text-white border-y border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
+                <div class="p-2">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-500">500K+</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">Pengguna Aktif</p>
+                </div>
+                <div class="p-2 pt-6 md:pt-2">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-500">Rp 12T+</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">Total Dana Dikelola</p>
+                </div>
+                <div class="p-2 pt-6 md:pt-2">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-500">4.9 / 5</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">Rating App Store & Play Store</p>
+                </div>
+                <div class="p-2 pt-6 md:pt-2">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-500">100%</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">Aman & Terenkripsi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="fitur" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-xs font-bold text-brand-600 tracking-wider uppercase">Fitur Unggulan</h2>
+                <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Semua Kelolaan Keuangan dalam Satu Genggaman</p>
+                <p class="text-slate-600 text-base sm:text-lg">Dirancang khusus untuk membantu Anda mengontrol pengeluaran, menyusun anggaran, dan melipatgandakan aset secara terukur.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <!-- Feature 1 -->
+                <div class="p-8 rounded-3xl bg-slate-50 hover:bg-white border border-slate-200/80 hover:border-brand-500/30 hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Manajemen Anggaran Otomatis</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Hubungkan akun bank & e-wallet Anda. Sistem AI FinNusa akan mengkategorikan setiap pengeluaran secara real-time tanpa ribet input manual.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="p-8 rounded-3xl bg-slate-50 hover:bg-white border border-slate-200/80 hover:border-brand-500/30 hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Auto-Save & Goal Pocket</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Tetapkan target impian (DP rumah, dana darurat, liburan). Biarkan fitur Auto-Save menyisihkan uang kembalian atau gaji secara teratur.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="p-8 rounded-3xl bg-slate-50 hover:bg-white border border-slate-200/80 hover:border-brand-500/30 hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Investasi Terintegrasi</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Akses instrumen Reksa Dana, Emas Digital, dan Surat Berharga Negara (SBN) langsung dari satu dasbor terpadu tanpa biaya tersembunyi.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Detailed Feature Highlight Banner -->
+            <div class="mt-16 rounded-3xl bg-gradient-to-r from-navy-900 to-slate-900 text-white p-8 md:p-12 overflow-hidden relative shadow-2xl">
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-6">
+                        <span class="px-3 py-1 bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded-full text-xs font-semibold">Laporan Keuangan Cerdas</span>
+                        <h3 class="text-3xl font-extrabold text-white">Analisis Kesehatan Keuangan Berbasis AI</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Dapatkan rekomendasi personal mengenai rasio tabungan, batasan gaya hidup, serta tips optimasi pajak tahunan dari penasihat AI terverifikasi.
+                        </p>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500"></i>
+                                <span>Peringatan dini saat pengeluaran melebihi batas (Overbudget Alert)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500"></i>
+                                <span>Laporan bulanan format PDF siap cetak / unduh</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500"></i>
+                                <span>Estimasi kebutuhan Dana Darurat sesuai profil risiko</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Skor Kesehatan Finansial</span>
+                                <span class="text-brand-400 font-bold">85/100 (Sangat Sehat)</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
+                                <div class="bg-gradient-to-r from-brand-500 to-emerald-400 h-full rounded-full" style="width: 85%"></div>
+                            </div>
+                            <div class="pt-4 border-t border-white/10 space-y-2 text-xs">
+                                <div class="flex justify-between text-slate-300">
+                                    <span>Rasio TabunganBulanan</span>
+                                    <span class="text-emerald-400 font-bold">32% (Ideal)</span>
+                                </div>
+                                <div class="flex justify-between text-slate-300">
+                                    <span>Rasio Utang / Income</span>
+                                    <span class="text-emerald-400 font-bold">12% (Sangat Aman)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- INTERACTIVE INVESTMENT SIMULATOR -->
+    <section id="simulasi" class="py-24 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-xs font-bold text-brand-600 tracking-wider uppercase">Simulasi Investasi</h2>
+                <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Hitung Estimasi Pertumbuhan Aset Anda</p>
+                <p class="text-slate-600 text-base">Gunakan kalkulator interaktif di bawah ini untuk melihat keajaiban *compound interest* (bunga berbunga) dalam jangka panjang.</p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl border-2 border-red-500 overflow-hidden p-6 sm:p-10">
+                <div class="grid lg:grid-cols-12 gap-10 items-center">
+                    
+                    <!-- Controls Column -->
+                    <div class="lg:col-span-5 space-y-6">
+                        
+                        <!-- Initial Capital Input -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <label class="text-slate-700">Modal Awal Investasi</label>
+                                <span id="modalValDisplay" class="text-brand-600 font-bold">Rp 10.000.000</span>
+                            </div>
+                            <input type="range" id="modalInput" min="1000000" max="100000000" step="1000000" value="10000000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <!-- Monthly Contribution -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <label class="text-slate-700">Tabungan Rutin Bulanan</label>
+                                <span id="monthlyValDisplay" class="text-brand-600 font-bold">Rp 1.000.000</span>
+                            </div>
+                            <input type="range" id="monthlyInput" min="100000" max="20000000" step="100000" value="1000000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <!-- Time Horizon (Years) -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <label class="text-slate-700">Jangka Waktu</label>
+                                <span id="yearsValDisplay" class="text-brand-600 font-bold">5 Tahun</span>
+                            </div>
+                            <input type="range" id="yearsInput" min="1" max="30" step="1" value="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <!-- Expected Return Rate (%) -->
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-2">
+                                <label class="text-slate-700">Estimasi Return per Tahun (% p.a)</label>
+                                <span id="returnValDisplay" class="text-brand-600 font-bold">10%</span>
+                            </div>
+                            <input type="range" id="returnInput" min="3" max="20" step="0.5" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <div class="p-4 bg-brand-50 rounded-2xl border border-brand-200 text-xs text-brand-900 space-y-1">
+                            <p class="font-bold flex items-center gap-2">
+                                <i class="fa-solid fa-lightbulb text-brand-600"></i> Catatan Simulasi:
+                            </p>
+                            <p class="text-slate-600">Simulasi ini menggunakan asumsi imbal hasil majemuk harian/bulanan teratur.</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart & Summary Results Column -->
+                    <div class="lg:col-span-7 bg-slate-50 rounded-2xl p-6 border border-slate-200/80 space-y-6">
+                        
+                        <!-- Result Metric Cards -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-xs text-slate-500 font-medium">Estimasi Total Akhir</p>
+                                <p id="totalFutureVal" class="text-lg sm:text-xl font-extrabold text-brand-600 mt-1">Rp 0</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="text-xs text-slate-500 font-medium">Total Pokok Tabungan</p>
+                                <p id="totalPrincipalVal" class="text-base sm:text-lg font-bold text-slate-800 mt-1">Rp 0</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm col-span-2 sm:col-span-1">
+                                <p class="text-xs text-slate-500 font-medium">Estimasi Imbal Hasil</p>
+                                <p id="totalInterestVal" class="text-base sm:text-lg font-bold text-emerald-600 mt-1">Rp 0</p>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Chart -->
+                        <div class="h-64 relative">
+                            <canvas id="calcChart"></canvas>
+                        </div>
+
+                        <div class="text-center">
+                            <button onclick="openModal('registerModal')" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md transition-all text-sm">
+                                Mulai Portofolio Investasi Ini Now
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECURITY & COMPLIANCE SECTION -->
+    <section id="keamanan" class="py-20 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider">
+                        Standar Keamanan Internasional
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+                        Keamanan Aset & Data Anda Adalah Prioritas Utama Kami
+                    </h2>
+                    <p class="text-slate-400 text-base leading-relaxed">
+                        Kami menerapkan arsitektur perlindungan berlapis standar perbankan dunia untuk memastikan semua transaksi dan rahasia data keuangan Anda 100% terlindungi.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0 font-bold">
+                                <i class="fa-solid fa-shield-cat text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-base">Enkripsi End-to-End 256-Bit</h4>
+                                <p class="text-slate-400 text-sm mt-0.5">Seluruh lalu lintas data dienkripsi dengan protokol SSL/TLS yang tak tertembus.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0 font-bold">
+                                <i class="fa-solid fa-fingerprint text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-base">Autentikasi Biometrik & 2FA</h4>
+                                <p class="text-slate-400 text-sm mt-0.5">Akses akun dilindungi FaceID, Sidik Jari, dan kode One-Time Password (OTP) instan.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0 font-bold">
+                                <i class="fa-solid fa-building-columns text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-base">Kustodian Bank Terlisensi</h4>
+                                <p class="text-slate-400 text-sm mt-0.5">Dana investasi disimpan langsung pada Bank Kustodian independen sesuai regulasi OJK.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Security Badges Showcase -->
+                <div class="lg:col-span-6 grid grid-cols-2 gap-4">
+                    <div class="p-6 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-center space-y-3">
+                        <i class="fa-solid fa-award text-4xl text-brand-400"></i>
+                        <h4 class="font-bold text-white">Sertifikasi ISO 27001</h4>
+                        <p class="text-xs text-slate-400">Standar Manajemen Keamanan Informasi Global</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-center space-y-3">
+                        <i class="fa-solid fa-building-circle-check text-4xl text-emerald-400"></i>
+                        <h4 class="font-bold text-white">Terdaftar OJK</h4>
+                        <p class="text-xs text-slate-400">Tercatat di Otoritas Jasa Keuangan RI</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-center space-y-3">
+                        <i class="fa-solid fa-user-shield text-4xl text-blue-400"></i>
+                        <h4 class="font-bold text-white">Perlindungan Asuransi</h4>
+                        <p class="text-xs text-slate-400">Dijamin oleh Lembaga Penjamin Simpanan</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-center space-y-3">
+                        <i class="fa-solid fa-clock-rotate-left text-4xl text-amber-400"></i>
+                        <h4 class="font-bold text-white">Audit 24/7 Realtime</h4>
+                        <p class="text-xs text-slate-400">Pemantauan aktivitas mencurigakan secara otomatis</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING / PLANS SECTION -->
+    <section id="harga" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                <h2 class="text-xs font-bold text-brand-600 tracking-wider uppercase">Pilihan Paket</h2>
+                <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Investasi Terbaik untuk Masa Depan Anda</p>
+                <p class="text-slate-600 text-base">Pilih paket layanan yang paling sesuai dengan kebutuhan finansial pribadi maupun keluarga Anda.</p>
+
+                <!-- Billing Cycle Toggle -->
+                <div class="pt-4 flex items-center justify-center gap-4 text-sm font-semibold">
+                    <span id="monthlyLabel" class="text-slate-900">Bayar Bulanan</span>
+                    <button id="planToggle" class="w-14 h-8 bg-brand-600 rounded-full p-1 transition-colors relative focus:outline-none">
+                        <div id="toggleCircle" class="w-6 h-6 bg-white rounded-full shadow-md transition-transform transform translate-x-0"></div>
+                    </button>
+                    <span id="yearlyLabel" class="text-slate-500 flex items-center gap-1.5">
+                        Bayar Tahunan 
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Hemat 20%</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 items-stretch">
+                
+                <!-- Basic Plan -->
+                <div class="rounded-3xl p-8 bg-slate-50 border border-slate-200 flex flex-col justify-between hover:shadow-lg transition-all">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Starter / Pemula</h3>
+                        <p class="text-xs text-slate-500 mt-1">Sangat cocok untuk belajar mengatur budget pertama Anda.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-slate-900">Gratis</span>
+                            <span class="text-xs text-slate-500">/ selamanya</span>
+                        </div>
+
+                        <ul class="space-y-3.5 text-sm text-slate-600 mb-8">
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>Hubungkan hingga 2 Akun Bank</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>Catatan Anggaran Otomatis</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>1 Target Kantong Tabungan</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-400">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>Laporan AI Health Score</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal('registerModal')" class="w-full py-3 px-4 rounded-xl border border-slate-300 font-bold text-slate-800 hover:bg-slate-200 transition-colors text-sm">
+                        Mulai Gratis
+                    </button>
+                </div>
+
+                <!-- Pro Plan (Featured) -->
+                <div class="rounded-3xl p-8 bg-slate-900 text-white border-2 border-brand-500 flex flex-col justify-between relative shadow-2xl scale-105">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-500 text-slate-900 px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                        Paling Populer
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Pro Wealth</h3>
+                        <p class="text-xs text-slate-400 mt-1">Untuk profesional yang ingin mempercepat kebebasan finansial.</p>
+                        
+                        <div class="my-6">
+                            <span id="proPrice" class="text-4xl font-extrabold text-white">Rp 49.000</span>
+                            <span id="proPeriod" class="text-xs text-slate-400">/ bulan</span>
+                        </div>
+
+                        <ul class="space-y-3.5 text-sm text-slate-300 mb-8">
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-400"></i>
+                                <span>Unlimited Akun Bank & E-Wallet</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-400"></i>
+                                <span>Unlimited Kantong Tabungan Auto-Save</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-400"></i>
+                                <span>Analisis AI Health Score & Alert</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-400"></i>
+                                <span>Bebas Biaya Transaksi Reksa Dana</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-400"></i>
+                                <span>Konsultasi Perencana Keuangan (1x/thn)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal('registerModal')" class="w-full py-3.5 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-900 font-extrabold shadow-lg transition-all text-sm">
+                        Coba Gratis 14 Hari
+                    </button>
+                </div>
+
+                <!-- Family / Enterprise Plan -->
+                <div class="rounded-3xl p-8 bg-slate-50 border border-slate-200 flex flex-col justify-between hover:shadow-lg transition-all">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Family & Business</h3>
+                        <p class="text-xs text-slate-500 mt-1">Kelola portofolio keluarga atau bisnis kecil dalam 1 tempat.</p>
+                        
+                        <div class="my-6">
+                            <span id="familyPrice" class="text-4xl font-extrabold text-slate-900">Rp 129.000</span>
+                            <span id="familyPeriod" class="text-xs text-slate-500">/ bulan</span>
+                        </div>
+
+                        <ul class="space-y-3.5 text-sm text-slate-600 mb-8">
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>Semua Fitur Paket Pro</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>Hingga 5 Anggota Keluarga / Tim</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>Laporan Keuangan Konsolidasi</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span>Prioritas Layanan Customer Support 24/7</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal('registerModal')" class="w-full py-3 px-4 rounded-xl border border-slate-300 font-bold text-slate-800 hover:bg-slate-200 transition-colors text-sm">
+                        Pilih Paket Family
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="py-24 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-xs font-bold text-brand-600 tracking-wider uppercase">Kisah Sukses</h2>
+                <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Dipercaya Oleh Ratusan Ribu Pengguna</p>
+                <p class="text-slate-600 text-base">Dengarkan cerita mereka yang berhasil mengelola keuangan dan mewujudkan mimpi bersama FinNusa.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+                    <div class="flex text-amber-400 text-sm gap-1">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        "Sejak pakai FinNusa, saya baru sadar kalau dulu banyak bocor halus di pengeluaran bulanan. Sekarang bisa nabung DP rumah 2x lebih cepat!"
+                    </p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center">
+                            RA
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Rian Ardiansyah</h4>
+                            <p class="text-xs text-slate-400">Software Engineer, Jakarta</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+                    <div class="flex text-amber-400 text-sm gap-1">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        "Fitur Auto-Save sangat membantu! Setiap gajian langsung masuk ke kantong investasi tanpa harus pusing ingat-ingat tanggal bayar."
+                    </p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center">
+                            SP
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Siti Pratiwi</h4>
+                            <p class="text-xs text-slate-400">Pengusaha UMKM, Bandung</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+                    <div class="flex text-amber-400 text-sm gap-1">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        "Dasbornya sangat bersih dan ramah pemula. Hasil kalkulator investasinya terbukti akurat dengan pertumbuhan aset riil saya."
+                    </p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center">
+                            DW
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Dimas Wijaya</h4>
+                            <p class="text-xs text-slate-400">Dokter Spesialis, Surabaya</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-16 space-y-4">
+                <h2 class="text-xs font-bold text-brand-600 tracking-wider uppercase">Pertanyaan Umum</h2>
+                <p class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Sering Ditanyakan (FAQ)</p>
+            </div>
+
+            <div class="space-y-4" id="faqAccordion">
+                
+                <!-- FAQ Item 1 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition-all">
+                    <button class="w-full p-6 text-left font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center faq-toggle">
+                        <span>Apakah dana investasi saya aman di FinNusa?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div class="p-6 text-slate-600 text-sm leading-relaxed hidden bg-white border-t border-slate-100">
+                        Sangat aman. FinNusa bekerja sama secara resmi dengan manajer investasi terlisensi Otoritas Jasa Keuangan (OJK). Dana Anda disimpan langsung di Bank Kustodian independen dan tidak disimpan dalam rekening operasional FinNusa.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition-all">
+                    <button class="w-full p-6 text-left font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center faq-toggle">
+                        <span>Berapa minimal saldo awal untuk mulai berinvestasi?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div class="p-6 text-slate-600 text-sm leading-relaxed hidden bg-white border-t border-slate-100">
+                        Anda dapat mulai berinvestasi Reksa Dana atau Emas Digital mulai dari Rp 10.000 saja tanpa biaya tersembunyi.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition-all">
+                    <button class="w-full p-6 text-left font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center faq-toggle">
+                        <span>Apakah dana bisa ditarik kapan saja?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div class="p-6 text-slate-600 text-sm leading-relaxed hidden bg-white border-t border-slate-100">
+                        Ya! Penarikan dana dapat dilakukan kapan saja tanpa penalti atau biaya tersembunyi. Proses pencairan dana ke rekening utama Anda membutuhkan waktu 1x24 jam kerja.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition-all">
+                    <button class="w-full p-6 text-left font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center faq-toggle">
+                        <span>Bagaimana cara kerja fitur Auto-Save?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div class="p-6 text-slate-600 text-sm leading-relaxed hidden bg-white border-t border-slate-100">
+                        Anda dapat mengatur aturan otomatis, misalnya: menyisihkan Rp 20.000 setiap hari atau 10% dari gaji setiap tanggal 25. Sistem akan mentransfer nominal tersebut secara otomatis ke Kantong Tabungan pilihan Anda.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION BANNER -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="rounded-3xl bg-gradient-to-tr from-brand-700 via-brand-600 to-emerald-500 text-white p-8 sm:p-14 relative overflow-hidden shadow-2xl">
+                <div class="max-w-2xl space-y-6 relative z-10">
+                    <h2 class="text-3xl sm:text-5xl font-extrabold leading-tight">Mulai Perjalanan Keuangan Cerdas Anda Hari Ini</h2>
+                    <p class="text-brand-100 text-base sm:text-lg">
+                        Daftar dalam waktu kurang dari 3 menit. Dapatkan uji coba Pro Wealth gratis selama 14 hari tanpa perlu kartu kredit.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="openModal('registerModal')" class="px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl shadow-lg transition-all text-base flex items-center gap-3">
+                            <span>Daftar Akun Sekarang</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <div class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-2xl backdrop-blur-sm text-xs font-semibold">
+                            <i class="fa-solid fa-qrcode text-xl"></i>
+                            <span>Scan QR di App Store / Play Store</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decorative Pattern -->
+                <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                
+                <!-- Brand Column -->
+                <div class="col-span-2 space-y-4">
+                    <a href="#" class="flex items-center gap-2.5 text-2xl font-extrabold tracking-tight text-white">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-chart-line text-base"></i>
+                        </div>
+                        <span>Fin<span class="text-brand-500">Nusa</span></span>
+                    </a>
+                    <p class="text-sm text-slate-400 max-w-sm">
+                        Platform manajemen keuangan dan investasi pintar terlengkap di Indonesia untuk membantu generasi muda mencapai kemandirian finansial.
+                    </p>
+                    <div class="flex gap-4 text-slate-400">
+                        <a href="#" class="hover:text-brand-500 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                        <a href="#" class="hover:text-brand-500 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                        <a href="#" class="hover:text-brand-500 transition-colors"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                        <a href="#" class="hover:text-brand-500 transition-colors"><i class="fa-brands fa-youtube text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links 1 -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Produk</h4>
+                    <ul class="space-y-2.5 text-xs sm:text-sm">
+                        <li><a href="#fitur" class="hover:text-white transition-colors">Manajemen Anggaran</a></li>
+                        <li><a href="#fitur" class="hover:text-white transition-colors">Auto-Save Pocket</a></li>
+                        <li><a href="#fitur" class="hover:text-white transition-colors">Reksa Dana & Emas</a></li>
+                        <li><a href="#simulasi" class="hover:text-white transition-colors">Kalkulator Simulasi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links 2 -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Perusahaan</h4>
+                    <ul class="space-y-2.5 text-xs sm:text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Karir</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog & Edukasi</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Siaran Pers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links 3 -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Dukungan</h4>
+                    <ul class="space-y-2.5 text-xs sm:text-sm">
+                        <li><a href="#faq" class="hover:text-white transition-colors">Pusat Bantuan</a></li>
+                        <li><a href="#keamanan" class="hover:text-white transition-colors">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Regulatory Note & Copyright -->
+            <div class="pt-8 border-t border-slate-800 text-xs text-slate-500 space-y-4">
+                <p>
+                    <strong>Disclaimer:</strong> FinNusa adalah platform inovasi keuangan digital yang terdaftar pada Otoritas Jasa Keuangan (OJK). Seluruh investasi mengandung risiko pertumbuhan nilai instrumen. Kinerja masa lalu tidak menjamin hasil di masa mendatang.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
+                    <p>© 2026 PT FinNusa Teknologi Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
+                    <p>Dibuat dengan <i class="fa-solid fa-heart text-red-500"></i> di Jakarta, Indonesia</p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- MODALS (REGISTER & LOGIN) -->
+    
+    <!-- Register Modal -->
+    <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative border border-slate-100">
+            <button onclick="closeModal('registerModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">Buat Akun FinNusa</h3>
+                <p class="text-xs text-slate-500">Mulai kelola keuangan Anda secara otomatis sekarang.</p>
+                
+                <form onsubmit="handleAuthForm(event, 'Pendaftaran Berhasil! Silakan cek email Anda untuk verifikasi.')" class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap</label>
+                        <input type="text" required placeholder="Sesuai KTP" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Alamat Email</label>
+                        <input type="email" required placeholder="nama@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+                        <input type="password" required placeholder="Minimal 8 Karakter" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-md mt-2">
+                        Daftar Sekarang
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative border border-slate-100">
+            <button onclick="closeModal('loginModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">Selamat Datang Kembali</h3>
+                <p class="text-xs text-slate-500">Masuk ke dasbor portofolio keuangan Anda.</p>
+                
+                <form onsubmit="handleAuthForm(event, 'Login Berhasil! Mengalihkan ke Dasbor...')" class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email</label>
+                        <input type="email" required placeholder="nama@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+                        <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-all shadow-md mt-2">
+                        Masuk Akun
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Box -->
+    <div id="toastBox" class="fixed bottom-6 right-6 z-50 px-6 py-4 rounded-2xl bg-slate-900 text-white text-sm font-semibold shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-brand-400 text-lg"></i>
+        <span id="toastMsg">Pesan Toast</span>
+    </div>
+
+    <!-- JAVASCRIPT & CHART LOGIC -->
+    <script>
+        // Modal Handlers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Custom Notification Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toastBox');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        function handleAuthForm(e, message) {
+            e.preventDefault();
+            closeModal('registerModal');
+            closeModal('loginModal');
+            showToast(message);
+        }
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // FAQ Accordion Logic
+        document.querySelectorAll('.faq-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Pricing Toggle Logic
+        const planToggle = document.getElementById('planToggle');
+        const toggleCircle = document.getElementById('toggleCircle');
+        let isYearly = false;
+
+        planToggle.addEventListener('click', () => {
+            isYearly = !isYearly;
+            if (isYearly) {
+                toggleCircle.classList.add('translate-x-6');
+                document.getElementById('proPrice').innerText = 'Rp 39.000';
+                document.getElementById('familyPrice').innerText = 'Rp 99.000';
+                document.getElementById('proPeriod').innerText = '/ bulan (ditagih tahunan)';
+                document.getElementById('familyPeriod').innerText = '/ bulan (ditagih tahunan)';
+            } else {
+                toggleCircle.classList.remove('translate-x-6');
+                document.getElementById('proPrice').innerText = 'Rp 49.000';
+                document.getElementById('familyPrice').innerText = 'Rp 129.000';
+                document.getElementById('proPeriod').innerText = '/ bulan';
+                document.getElementById('familyPeriod').innerText = '/ bulan';
+            }
+        });
+
+        // Format Currency Utility (Rupiah)
+        function formatIDR(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        // Hero Mini Chart Instance
+        window.addEventListener('DOMContentLoaded', () => {
+            const heroCtx = document.getElementById('heroMiniChart').getContext('2d');
+            new Chart(heroCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
+                    datasets: [{
+                        data: [110, 115, 122, 128, 134, 139, 142, 148.5],
+                        borderColor: '#059669',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const {ctx, chartArea} = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+                            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+                            return gradient;
+                        },
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+
+            // Interactive Simulator Calculator Logic
+            const modalInput = document.getElementById('modalInput');
+            const monthlyInput = document.getElementById('monthlyInput');
+            const yearsInput = document.getElementById('yearsInput');
+            const returnInput = document.getElementById('returnInput');
+
+            const calcCtx = document.getElementById('calcChart').getContext('2d');
+            let calcChart = new Chart(calcCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Total Hasil Investasi',
+                            borderColor: '#059669',
+                            backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 3,
+                            data: []
+                        },
+                        {
+                            label: 'Total Setoran Pokok',
+                            borderColor: '#94a3b8',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0,
+                            data: []
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (item) => `${item.dataset.label}: ${formatIDR(item.raw)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                        y: { 
+                            ticks: { 
+                                callback: (val) => 'Rp ' + (val/1000000).toFixed(0) + ' Jt',
+                                font: { size: 10 }
+                            } 
+                        }
+                    }
+                }
+            });
+
+            function updateSimulator() {
+                const P = parseFloat(modalInput.value);
+                const PMT = parseFloat(monthlyInput.value);
+                const years = parseInt(yearsInput.value);
+                const r = parseFloat(returnInput.value) / 100 / 12;
+
+                document.getElementById('modalValDisplay').innerText = formatIDR(P);
+                document.getElementById('monthlyValDisplay').innerText = formatIDR(PMT);
+                document.getElementById('yearsValDisplay').innerText = years + ' Tahun';
+                document.getElementById('returnValDisplay').innerText = (r * 12 * 100).toFixed(1) + '%';
+
+                const labels = [];
+                const futureValues = [];
+                const principalValues = [];
+
+                let currentTotal = P;
+                let currentPrincipal = P;
+
+                for (let y = 0; y <= years; y++) {
+                    labels.push('Thn ' + y);
+                    if (y === 0) {
+                        futureValues.push(P);
+                        principalValues.push(P);
+                    } else {
+                        for (let m = 0; m < 12; m++) {
+                            currentTotal = (currentTotal + PMT) * (1 + r);
+                            currentPrincipal += PMT;
+                        }
+                        futureValues.push(Math.round(currentTotal));
+                        principalValues.push(Math.round(currentPrincipal));
+                    }
+                }
+
+                const totalFuture = futureValues[futureValues.length - 1];
+                const totalPrincipal = principalValues[principalValues.length - 1];
+                const totalInterest = totalFuture - totalPrincipal;
+
+                document.getElementById('totalFutureVal').innerText = formatIDR(totalFuture);
+                document.getElementById('totalPrincipalVal').innerText = formatIDR(totalPrincipal);
+                document.getElementById('totalInterestVal').innerText = formatIDR(totalInterest);
+
+                calcChart.data.labels = labels;
+                calcChart.data.datasets[0].data = futureValues;
+                calcChart.data.datasets[1].data = principalValues;
+                calcChart.update();
+            }
+
+            [modalInput, monthlyInput, yearsInput, returnInput].forEach(elem => {
+                elem.addEventListener('input', updateSimulator);
+            });
+
+            updateSimulator()
+        });
+    </script>
+</body>
+</html>
